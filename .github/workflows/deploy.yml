@@ -43,7 +43,8 @@ jobs:
             cd /home/ubuntu/pro
 
             echo "1. git pull"
-            git pull
+            git fetch origin
+            git reset --hard origin/main
 
             echo "2. docker compose pull"
             docker compose pull
