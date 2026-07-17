@@ -42,14 +42,22 @@ jobs:
           script: |
             cd /home/ubuntu/pro
 
+            echo "1. git pull"
             git pull
 
+            echo "2. docker compose pull"
             docker compose pull
 
+            echo "3. docker compose up"
             docker compose up -d
 
+            echo "4. migrate"
             docker compose exec -T web python manage.py migrate
 
+            echo "5. collectstatic"
             docker compose exec -T web python manage.py collectstatic --noinput
 
+            echo "6. prune"
             docker image prune -f
+
+            echo "Done!"
