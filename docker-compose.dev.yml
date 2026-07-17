@@ -1,0 +1,86 @@
+services:
+  # WEB -=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=
+  web:
+    build: .
+    container_name: fulldjango_app
+
+    command: python manage.py runserver 0.0.0.0:8000
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - .:/pro
+
+    env_file:
+      - .env
+
+    depends_on:
+      - db
+      - redis
+
+  # worker -=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=
+  worker:
+    build: .
+
+    container_name: celery_worker
+
+    command: celery -A pro worker -l info
+
+    volumes:
+      - .:/pro
+
+    env_file:
+      - .env
+      
+    depends_on:
+      - redis
+      - db
+
+  # db -=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=
+  db:
+    image: postgres:17
+    container_name: postgres_dbnew
+
+    restart: always
+
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+# REDIS -=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=
+  redis:
+    image: redis:8
+    container_name: redis_cachenew
+
+    restart: always
+
+    ports:
+      - "6379:6379"
+#  nginex-=--=-=-=-=-=-=-=-=
+  nginx:
+    image: nginx:latest
+
+    ports:
+      - "80:80"
+
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./staticfiles:/pro/staticfiles
+      - ./media:/pro/media
+
+    depends_on:
+      - web
+
+    restart: always
+
+# VOLUEMS -=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=
+volumes:
+  postgres_data:
