@@ -40,7 +40,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
 
           script: |
-            cd /home/ubuntu
+            cd /home/ubuntu/pro
+
+            git pull
 
             docker compose pull
 
