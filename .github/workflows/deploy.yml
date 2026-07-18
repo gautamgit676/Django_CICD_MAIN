@@ -52,6 +52,9 @@ jobs:
             echo "3. docker compose up"
             docker compose up -d
 
+            echo "Waiting for Gunicorn..."
+            sleep 10
+            
             echo "4. migrate"
             docker compose exec -T web python manage.py migrate
 
