@@ -2,10 +2,10 @@ services:
 
   web:
     healthcheck:
-    test: ["CMD", "python", "-c", "import socket; s=socket.socket(); exit(s.connect_ex(('127.0.0.1',8000)))"]
-    interval: 10s
-    timeout: 5s
-    retries: 5
+      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); exit(s.connect_ex(('127.0.0.1',8000)))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     image: gautam147/pro:latest
 
     command: gunicorn pro.wsgi:application --bind 0.0.0.0:8000
