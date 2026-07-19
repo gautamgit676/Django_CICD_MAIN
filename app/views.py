@@ -4,18 +4,24 @@ from django.shortcuts import render
 from app.models import * 
 # Create your views here.
 
+import traceback
+
 def Home(request):
     if request.method == "POST":
-        name = request.POST.get("name")
-        place = request.POST.get("place")
-        image = request.FILES.get("image")
+        try:
+            Student.objects.create(
+                name=request.POST.get("name"),
+                place=request.POST.get("place"),
+                image=request.FILES.get("image"),
+            )
+            return redirect("home")
 
-        Student.objects.create(name=name,place=place,image=image,)
-        return redirect("home")  # or redirect("/") if that's your URL
+        except Exception:
+            traceback.print_exc()
+            raise
 
     students = Student.objects.all()
-    return render(request,"home.html",{"students": students,},)  
-
+    return render(request, "home.html", {"students": students})
 
 # Create your views here.
 
