@@ -50,11 +50,11 @@ jobs:
             docker compose pull
 
             echo "3. docker compose up"
-            docker compose up -d
-            # docker compose up -d --remove-orphans
+            # docker compose up -d
+            docker compose up -d --remove-orphans
             
             echo "Reload nginx"
-            # docker compose exec -T nginx nginx -s reload
+            docker compose exec -T nginx nginx -s reload
 
             echo "Waiting for Gunicorn..."
             until [ "$(docker inspect --format='{{.State.Health.Status}}' pro-web-1)" = "healthy" ]; do
