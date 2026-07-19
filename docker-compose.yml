@@ -1,12 +1,15 @@
+version: "3.9"
+
 services:
 
   web:
+    image: gautam147/pro:latest
+
     healthcheck:
       test: ["CMD", "python", "-c", "import socket; s=socket.socket(); exit(s.connect_ex(('127.0.0.1',8000)))"]
       interval: 10s
       timeout: 5s
       retries: 5
-    image: gautam147/pro:latest
 
     command: gunicorn pro.wsgi:application --bind 0.0.0.0:8000
 
@@ -21,10 +24,10 @@ services:
       - .env
 
     depends_on:
-      - db
       - redis
 
     restart: always
+
 
   worker:
     image: gautam147/pro:latest
@@ -36,9 +39,9 @@ services:
 
     depends_on:
       - redis
-      - db
 
     restart: always
+
 
   beat:
     image: gautam147/pro:latest
@@ -50,25 +53,8 @@ services:
 
     depends_on:
       - redis
-      - db
 
     restart: always
-
-
-  db:
-    image: postgres:17
-
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-    restart: always
-
-
 
 
   redis:
@@ -89,13 +75,12 @@ services:
       - media_volume:/pro/media
 
     depends_on:
-      - web
+      web:
+        condition: service_healthy
 
     restart: always
 
 
 volumes:
-  postgres_data:
   static_volume:
   media_volume:
-
