@@ -50,11 +50,17 @@ jobs:
             docker compose pull
 
             echo "3. docker compose up"
-            docker compose up -d
+            # docker compose up -d
+            docker compose up -d --remove-orphans
+            
+            echo "Reload nginx"
+            docker compose exec -T nginx nginx -s reload
 
             echo "Waiting for Gunicorn..."
-            sleep 10
-            
+            until [ "$(docker inspect --format='{{.State.Health.Status}}' pro-web-1)" = "healthy" ]; do
+              sleep 2
+            done
+                        
             echo "4. migrate"
             docker compose exec -T web python manage.py migrate
 
