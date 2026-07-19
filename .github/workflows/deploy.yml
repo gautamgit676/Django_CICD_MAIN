@@ -50,8 +50,8 @@ jobs:
             docker compose pull
 
             echo "3. docker compose up"
-            # docker compose up -d
-            docker compose up -d --remove-orphans
+            docker compose up -d
+            # docker compose up -d --remove-orphans
             
             echo "Reload nginx"
             docker compose exec -T nginx nginx -s reload
