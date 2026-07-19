@@ -36,11 +36,6 @@
     <p><strong>Place:</strong> {{ student.place }}</p>
 
 
-   
-        <video controls width="300">
-            <source src="{{ student.file.url }}" type="video/mp4">
-        </video>
-   
 
     {% if student.image %}
         <img src="{{ student.image.url }}" width="200">
