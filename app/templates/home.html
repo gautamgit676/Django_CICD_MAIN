@@ -36,20 +36,15 @@
     <p><strong>Place:</strong> {{ student.place }}</p>
 
 
-    {% with ext=student.file.name|lower %}
-    {% if ext|slice:"-4:" == ".mp4" %}
+   
         <video controls width="300">
             <source src="{{ student.file.url }}" type="video/mp4">
         </video>
-    {% else %}
-        <img src="{{ student.file.url }}" width="300">
-    {% endif %}
-    {% endwith %}
+   
 
-
-    <!-- {% if student.image %}
+    {% if student.image %}
         <img src="{{ student.image.url }}" width="200">
-    {% endif %} -->
+    {% endif %}
 
 
 
